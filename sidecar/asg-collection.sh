@@ -13,8 +13,11 @@
 # REGION = region of the ASG or the default region          #
 #############################################################
 
+if [ -z $REGION ]; then
+    REGION=$(aws configure get region)
+fi
 
-for v in ASG SSHUSER; do
+for v in ASG SSHUSER REGION; do
     val=$(eval "echo \"\$$v\"")
     if [ -n "$val" ]; then
         echo "$v: $val"
@@ -23,7 +26,7 @@ for v in ASG SSHUSER; do
         exit 1
     fi
 done
-echo "REGION: ${REGION:=$(aws configure get region)}"
+
 
 # generate temp SSH key pair ./sshtempkey and ./sshtempkey.pub
 if [ ! -f "${PWD}/sshtempkey" ]; then
@@ -61,7 +64,7 @@ for cid in $cids; do
     cname=$(sudo docker inspect $cid -f "{{.Name}}")
     echo "Processing ${cname}"
     sudo docker inspect $cid > "${PWD}${cname}_inspect.txt"
-    sudo docker logs $cid > "${PWD}${cname}.log" 2> "${PWD}${cname}_err.log"
+    sudo docker logs $cid > "${PWD}${cname}_out.log" 2> "${PWD}${cname}_err.log"
 done
 tar --remove-files -czvf cyrallogs.tar.gz ./*
 echo "Processed Successfully!"
