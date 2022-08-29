@@ -4,31 +4,51 @@ Scripts and tools to help support setups
 
 # Sidecar Tools
 
-## Sidecar ASG Log Collection
+## Sidecar Log Collection
 
-The simple form would be to run the following command which will prompt for ASG/SSHUSER/REGION
-
-```
-./asg-collection.sh
-```
-
-It also supports environment variable input
+Single command to collect sidecar logs
 
 ```
-ASG=the-asg-name SSHUSER=ec2-user REGION=us-west-2 ./asg-collection.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/cyralinc/support-tools/main/sidecar/sidecar-log-collection.sh)"
 ```
+This command will create a `cyral_support.tar.gz` file for submission.
 
-REGION is options and will use your default region if not provided.
+This can be run via  [AWS CloudShell](console.aws.amazon.com/cloudshell)
 
-> The SSHUSER will depend on the AMI/OS used but will typically be `ec2-user` or `ubuntu`
+## Environment Variables
 
-### Use AWS CloudShell
+This script can be run without a menu if the proper environment variables are set.
 
-Launch the [AWS CloudShell service](console.aws.amazon.com/cloudshell)
+Set `COLLECTION_TYPE` to one of the following `ASG` `EC2` `Kubernetes` `SSH` (Case sensitive) to trigger automatic collection.
+Below are the variable required for each type of collection.
 
+### ASG Variables
 
-```
-curl -OL https://raw.githubusercontent.com/cyralinc/support-tools/main/sidecar/asg-collection.sh && chmod +x asg-collection.sh
-./asg-collection.sh
-```
-use the Download option to retrieve the log collection file `~/cyral_support.tar.gz` and submit it with a ticket.
+|Variable|Description|
+|---|---|
+|ASG|Name of the ASG to collect from|
+|REGION|Region ASG is in|
+|SSH_USER|Username to use to ssh to instance. `ec2-user` is commonly used|
+
+### EC2 Variables
+
+|Variable|Description|
+|---|---|
+|INSTANCE_ID|EC2 instance ID to collect from|
+|REGION|Region ASG is in|
+|SSH_USER|Username to use to ssh to instance. `ec2-user` is commonly used|
+
+### SSH Variables
+
+|Variable|Description|
+|---|---|
+|SSH_ADDRESS|ip or dns name for instance to collect from|
+|SSH_USER|Username to use to ssh to instance|
+|SSH_KEY_PATH|The private key to use to ssh to the instance|
+
+### Kubernetes Variables
+
+|Variable|Description|
+|---|---|
+|NAMESPACE|(optional) Namespace to collect from, if not all namespaces are checked|
+|SIDECAR_ID|(optional) Sidecar Id to identify pods to collect from|
