@@ -14,10 +14,10 @@ python3 -m pip install awslogs
 
 ### Usage
 
-The simplest way to college logs would be in the following form, updating the <stack_name> for the name of your cloudformation stack (log group name is the same) and setting the start and end time. If you dont provide a Start/End it will only pull the last 5 minutes.
+The simplest way to collect logs would be in the following form: update the <stack_name> with the name of your CloudFormation stack (log group name is the same) and set the start and end time. If you don't provide a Start/End, it will only pull the last 5 minutes.
 
 ```shell
 awslogs get <stack_name> --timestamp --no-group --start "11/16/2022 10:00" --end "11/16/2022 11:00" | gzip -c - > cyral_logs.gz
 ```
 
-Additional information on AWS credentials options and time formats can be found on the [awscli readme](https://github.com/jorgebastida/awslogs)
+Additional information on AWS credentials options and time formats can be found on the [awslogs readme](https://github.com/jorgebastida/awslogs)
